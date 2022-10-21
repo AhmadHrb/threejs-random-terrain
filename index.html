@@ -12,19 +12,20 @@
 </head>
 
 <body>
-    <script src="three.js"></script>
+    <script src="./three.js"></script>
     <script>
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        camera.position.y = 10;
-        camera.position.x = 20;
-        camera.position.z = 20;
+        // camera.position.y = 10;
+        // camera.position.x = 20;
+        // camera.position.z = 20;
 
 
-        camera.rotation.y = 45;
-        camera.rotation.x = -45;
-        camera.rotation.z = 45;
+        // camera.rotation.y = 45;
+        // camera.rotation.x = -45;
+        // camera.rotation.z = 45;
+
 
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -32,11 +33,13 @@
 
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const material1 = new THREE.MeshBasicMaterial({ color: 0xcccccc });
+        const material2 = new THREE.MeshBasicMaterial({ color: 0x652A0E });
+        const material3 = new THREE.MeshBasicMaterial({ color: 0x90ee90 });
 
         let currentY = 0;
 
-        for (let x = -10; x < 10; x++) {
-            for (let z = -10; z < 10; z++) {
+        for (let x = -20; x < 20; x++) {
+            for (let z = -20; z < 20; z++) {
 
                 let chance = Math.round(Math.random() * 100);
 
@@ -57,18 +60,71 @@
 
                 for (let i = currentY - 1; i > -10; i--) {
 
-                    const geometry2 = new THREE.BoxGeometry(1, 1, 1);
-                    const cube2 = new THREE.Mesh(geometry2, material1);
+                    const cube2 = new THREE.Mesh(geometry, material1);
                     cube2.position.x = x;
                     cube2.position.y = i;
                     cube2.position.z = z;
                     scene.add(cube2);
                 }
+
+                let chance1 = Math.round(Math.random() * 100);
+                if (chance1 == 1) {
+                    for (let i = currentY + 1; i < currentY + 5; i++) {
+                        const cube3 = new THREE.Mesh(geometry, material2);
+                        cube3.position.x = x;
+                        cube3.position.y = i;
+                        cube3.position.z = z;
+                        scene.add(cube3);
+                    }
+                    for (let i = currentY + 3; i < currentY + 6; i++) {
+                        for (let tx = -2; tx < 2; tx++) {
+                            for (let tz = -2; tz < 2; tz++) {
+                                const cube4 = new THREE.Mesh(geometry, material3);
+                                cube4.position.x = x + tx;
+                                cube4.position.y = i;
+                                cube4.position.z = z + tz;
+                                scene.add(cube4);
+                            }
+                        }
+                    }
+                }
+
+
             }
         }
 
-
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
         renderer.render(scene, camera);
+
+        function move (e) {
+            e.preventDefault();
+            // console.log(e)
+            let key = e.key;
+            if (key == "w") {
+                camera.position.z += 0.1;
+            } else if (key == "s") {
+                camera.position.z -= 0.1;
+            } else if (key == "d") {
+                camera.position.x -= 0.1;
+            } else if (key == "a") {
+                camera.position.x += 0.1;
+            } else if (e.code == "Space") {
+                camera.position.y += 0.1;
+            } else if (key == "ArrowRight") {
+                camera.rotation.y -= 0.1;
+            } else if (key == "ArrowLeft") {
+                camera.rotation.y += 0.1;
+            } else if (key == "ArrowUp") {
+                camera.rotation.x += 0.1;
+            } else if (key == "ArrowDown") {
+                camera.rotation.x -= 0.1;
+            }
+        }
+        window.addEventListener("keydown",move);
 
     </script>
 </body>
